@@ -8,10 +8,11 @@ from robobrowser import RoboBrowser
 
 @argh.arg('-d', type=int, required=True, help='date')
 @argh.arg('-m', type=int, help='month')
+@argh.arg('-y', type=int, help='year')
 @argh.arg('--hour', type=int, help='hour')
 @argh.arg('--min', type=int, help='minutes')
 @argh.arg('--location', help='location')
-def main(d=None, m=None, hour="7", min="30", location="123 rue royale 1000 Bruxelles Belgique"):
+def main(d=None, m=None, hour="7", y=None, min="30", location="123 rue royale 1000 Bruxelles Belgique", title=None):
     robot = RoboBrowser(parser="html5lib")
 
     if m is None:
@@ -29,14 +30,18 @@ def main(d=None, m=None, hour="7", min="30", location="123 rue royale 1000 Bruxe
 
     year, number = map(int, previous_meeting.split()[1].split("/"))
 
-    current_year = date.today().year
+    if y is None:
+        y = date.today().year
 
-    if year != current_year:
+    if y < 2000:
+        y += 2000
+
+    if year != y:
         next_number = 1
     else:
         next_number = 1 + number
 
-    next_meeting = "Meeting %i/%.2i" % (current_year, next_number)
+    next_meeting = "Meeting %i/%.2i" % (y, next_number)
 
     robot.open("https://neutrinet.be/index.php?title=Special:UserLogin&returnto=Main+Page")
 
@@ -67,14 +72,14 @@ def main(d=None, m=None, hour="7", min="30", location="123 rue royale 1000 Bruxe
 
     form['Event[Date][day]'] = d
     form['Event[Date][month]'] = '%.2i' % m
-    form['Event[Date][year]'] = current_year
+    form['Event[Date][year]'] = y
     form['Event[Date][hour]'] = hour
     form['Event[Date][minute]'] = min
     form['Event[Date][ampm24h]'] = 'PM'
     form['Event[Lieu]'] = location
     form['Event[Organisateur]'] = username
     form['Event[Statut]'] = 'Ready'
-    form['sf_free_text'] = 'https://pad.lqdn.fr/p/neutrinet-%.2i-%i' % (next_number, current_year)
+    form['sf_free_text'] = 'https://pad.lqdn.fr/p/neutrinet-%.2i-%i' % (next_number, y)
 
     robot.submit_form(form, form.submit_fields["wpSave"])
 
