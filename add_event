@@ -50,6 +50,7 @@ def main(d=None, m=None, hour="7", y=None, min="30", location="123 rue royale 10
 
     assert form is not None
 
+    print "Login into mediawiki:"
     username = raw_input('Username: ')
     form['wpName'] = username
     form['wpPassword'] = getpass()
