@@ -58,8 +58,8 @@ def main(d=None, m=None):
 
     form = robot.get_form("sfForm")
 
-    # form['Event[Date][day]'] = day
-    # form['Event[Date][month]'] = '%.2i' % month
+    form['Event[Date][day]'] = int(d)
+    form['Event[Date][month]'] = '%.2i' % int(m)
     form['Event[Date][year]'] = current_year
     form['Event[Date][hour]'] = '7'
     form['Event[Date][minute]'] = '30'
