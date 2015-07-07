@@ -69,8 +69,6 @@ def main(d=None, m=None):
     form['Event[Statut]'] = 'Ready'
     form['sf_free_text'] = 'https://pad.lqdn.fr/p/neutrinet-%.2i-%i' % (next_number, current_year)
 
-    robot.submit_form(form)
-
     robot.submit_form(form, form.submit_fields["wpSave"])
 
 
