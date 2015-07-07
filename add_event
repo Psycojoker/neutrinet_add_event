@@ -6,8 +6,8 @@ from datetime import date
 from getpass import getpass
 from robobrowser import RoboBrowser
 
-@argh.arg('-d', required=True, help='date')
-@argh.arg('-m', help='month')
+@argh.arg('-d', type=int, required=True, help='date')
+@argh.arg('-m', type=int, help='month')
 def main(d=None, m=None):
     robot = RoboBrowser(parser="html5lib")
 
