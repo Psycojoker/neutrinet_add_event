@@ -17,6 +17,10 @@ def main(d=None, m=None, hour="7", min="30", location="123 rue royale 1000 Bruxe
     if m is None:
         m = date.today().month
 
+    # we are in am/pm mode
+    if hour > 12:
+        hour -= 12
+
     robot.session.verify = False  # until letsencrypt our cert is self signed #yolo
 
     robot.open("https://neutrinet.be/index.php")
