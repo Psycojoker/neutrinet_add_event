@@ -60,7 +60,8 @@ def main(d=None, m=None, hour="7", y=None, min="30", location="123 rue royale 10
 
     form = robot.get_form(action="/index.php?title=Special:FormStart")
 
-    form["page_name"] = next_meeting
+    form["page_name"] = next_meeting if title is None else title
+
     robot.submit_form(form)
 
     # semantic form is bullshit and do a redirect in javascript
