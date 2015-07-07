@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
 import re
+import argh
 from datetime import date
 from getpass import getpass
 from robobrowser import RoboBrowser
 
-if __name__ == '__main__':
+@argh.arg('-d', required=True, help='date')
+@argh.arg('-m', help='month')
+def main(d=None, m=None):
     robot = RoboBrowser(parser="html5lib")
 
     robot.session.verify = False  # until letsencrypt our cert is self signed #yolo
@@ -66,3 +69,7 @@ if __name__ == '__main__':
     robot.submit_form(form)
 
     robot.submit_form(form, form.submit_fields["wpSave"])
+
+
+if __name__ == '__main__':
+    argh.dispatch_command(main)
