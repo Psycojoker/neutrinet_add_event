@@ -11,6 +11,9 @@ from robobrowser import RoboBrowser
 def main(d=None, m=None):
     robot = RoboBrowser(parser="html5lib")
 
+    if m is None:
+        m = date.today().month
+
     robot.session.verify = False  # until letsencrypt our cert is self signed #yolo
 
     robot.open("https://neutrinet.be/index.php")
