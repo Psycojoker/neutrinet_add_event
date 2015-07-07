@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+
+import re
+from datetime import date
+from getpass import getpass
+from robobrowser import RoboBrowser
+
+if __name__ == '__main__':
+    robot = RoboBrowser(parser="html5lib")
+
+    robot.session.verify = False  # until letsencrypt our cert is self signed #yolo
+
+    robot.open("https://neutrinet.be/index.php")
+
+    previous_meeting = [x.text for x in robot.find_all('a', href=lambda x: x and 'Event:' in x) if re.match('^Meeting [0-9]+/[0-9]+$', x.text)][0]
+
+    year, number = map(int, previous_meeting.split()[1].split("/"))
+
+    current_year = date.today().year
+
+    if year != current_year:
+        next_number = 1
+    else:
+        next_number = 1 + number
+
+    next_meeting = "Meeting %i/%.2i" % (current_year, next_number)
+
+    robot.open("https://neutrinet.be/index.php?title=Special:UserLogin&returnto=Main+Page")
+
+    form = robot.get_form(method="post")
+
+    assert form is not None
+
+    username = raw_input('Username: ')
+    form['wpName'] = username
+    form['wpPassword'] = getpass()
+
+    robot.submit_form(form)
+
+    # go to add event page
+    robot.follow_link(robot.find_all('a', href='/index.php?title=Form:Event')[0])
+
+    form = robot.get_form(action="/index.php?title=Special:FormStart")
+
+    form["page_name"] = next_meeting
+    robot.submit_form(form)
+
+    # semantic form is bullshit and do a redirect in javascript
+    destination = re.search('window.location="([^"]+)"', str(robot.parsed)).groups()[0]
+
+    robot.open("https://neutrinet.be" + destination)
+
+    form = robot.get_form("sfForm")
+
+    # form['Event[Date][day]'] = day
+    # form['Event[Date][month]'] = '%.2i' % month
+    form['Event[Date][year]'] = current_year
+    form['Event[Date][hour]'] = '7'
+    form['Event[Date][minute]'] = '30'
+    form['Event[Date][ampm24h]'] = 'PM'
+    form['Event[Lieu]'] = '123 rue royale 1000 Bruxelles Belgique'
+    form['Event[Organisateur]'] = username
+    form['Event[Statut]'] = 'Ready'
+    form['sf_free_text'] = 'https://pad.lqdn.fr/p/neutrinet-%.2i-%i' % (next_number, current_year)
+
+    robot.submit_form(form)
+
+    robot.submit_form(form, form.submit_fields["wpSave"])
