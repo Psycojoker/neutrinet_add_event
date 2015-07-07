@@ -23,6 +23,9 @@ def main(d=None, m=None, hour="7", y=None, min="30", location="123 rue royale 10
     # we are in am/pm mode
     if hour > 12:
         hour -= 12
+        ampm = 'PM'
+    else:
+        ampm = 'AM'
 
     robot.session.verify = False  # until letsencrypt our cert is self signed #yolo
 
@@ -84,7 +87,7 @@ def main(d=None, m=None, hour="7", y=None, min="30", location="123 rue royale 10
     form['Event[Date][year]'] = y
     form['Event[Date][hour]'] = hour
     form['Event[Date][minute]'] = min
-    form['Event[Date][ampm24h]'] = 'PM'
+    form['Event[Date][ampm24h]'] = ampm
     form['Event[Lieu]'] = location
     form['Event[Organisateur]'] = username
     form['Event[Statut]'] = 'Ready'
