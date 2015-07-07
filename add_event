@@ -68,10 +68,10 @@ def main(d=None, m=None, hour="7", min="30", location="123 rue royale 1000 Bruxe
     form['Event[Date][day]'] = int(d)
     form['Event[Date][month]'] = '%.2i' % int(m)
     form['Event[Date][year]'] = current_year
-    form['Event[Date][hour]'] = '7'
-    form['Event[Date][minute]'] = '30'
+    form['Event[Date][hour]'] = hour
+    form['Event[Date][minute]'] = min
     form['Event[Date][ampm24h]'] = 'PM'
-    form['Event[Lieu]'] = '123 rue royale 1000 Bruxelles Belgique'
+    form['Event[Lieu]'] = location
     form['Event[Organisateur]'] = username
     form['Event[Statut]'] = 'Ready'
     form['sf_free_text'] = 'https://pad.lqdn.fr/p/neutrinet-%.2i-%i' % (next_number, current_year)
