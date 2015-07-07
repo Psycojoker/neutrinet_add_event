@@ -48,7 +48,7 @@ def main(d=None, m=None, hour="7", y=None, min="30", location="123 rue royale 10
 
     next_meeting = "Meeting %i/%.2i" % (y, next_number)
 
-    print "I'm about to create the event '%s' on %s:%s %s/%s/%s at '%s'" % (next_meeting if title is None else title, hour, min, d, m, year, location)
+    print "I'm about to create the event '%s' on %s:%s %s/%s/%s at '%s'" % (next_meeting if title is None else title, hour + 12 if ampm == 'PM' else hour, min, d, m, year, location)
 
     if raw_input('Continue? [Y/n]: ') == 'n':
         sys.exit(0)
