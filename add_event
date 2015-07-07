@@ -14,7 +14,7 @@ from robobrowser import RoboBrowser
 @argh.arg('--hour', type=int, help='hour')
 @argh.arg('--min', type=int, help='minutes')
 @argh.arg('--location', help='location')
-def main(d=None, m=None, hour="7", y=None, min="30", location="123 rue royale 1000 Bruxelles Belgique", title=None):
+def main(d=None, m=None, hour="19", y=None, min="30", location="123 rue royale 1000 Bruxelles Belgique", title=None):
     robot = RoboBrowser(parser="html5lib")
 
     if m is None:
