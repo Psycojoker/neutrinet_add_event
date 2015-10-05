@@ -31,24 +31,31 @@ def main(d=None, m=None, hour="19", y=None, min="30", location="123 rue royale 1
 
     robot.open("https://neutrinet.be/index.php")
 
-    previous_meeting = [x.text for x in robot.find_all('a', href=lambda x: x and 'Event:' in x) if re.match('^Meeting [0-9]+/[0-9]+$', x.text)][0]
 
-    year, number = map(int, previous_meeting.split()[1].split("/"))
+    if title is None:
+        previous_meeting = [x.text for x in robot.find_all('a', href=lambda x: x and 'Event:' in x) if re.match('^Meeting [0-9]+/[0-9]+$', x.text)]
 
-    if y is None:
-        y = date.today().year
+        if not previous_meeting:
+            raise Exception("I can't find the previous meeting and you haven't gave me a title")
 
-    if y < 2000:
-        y += 2000
+        previous_meeting = previous_meeting[0]
 
-    if year != y:
-        next_number = 1
-    else:
-        next_number = 1 + number
+        year, number = map(int, previous_meeting.split()[1].split("/"))
 
-    next_meeting = "Meeting %i/%.2i" % (y, next_number)
+        if y is None:
+            y = date.today().year
 
-    print "I'm about to create the event '%s' on %s:%s %s/%s/%s at '%s'" % (next_meeting if title is None else title, hour + 12 if ampm == 'PM' else hour, min, d, m, year, location)
+        if y < 2000:
+            y += 2000
+
+        if year != y:
+            next_number = 1
+        else:
+            next_number = 1 + number
+
+        title = "Meeting %i/%.2i" % (y, next_number)
+
+    print "I'm about to create the event '%s' on %s:%s %s/%s/%s at '%s'" % (title, hour + 12 if ampm == 'PM' else hour, min, d, m, year, location)
 
     if raw_input('Continue? [Y/n]: ') == 'n':
         sys.exit(0)
@@ -71,7 +78,7 @@ def main(d=None, m=None, hour="19", y=None, min="30", location="123 rue royale 1
 
     form = robot.get_form(action="/index.php?title=Special:FormStart")
 
-    form["page_name"] = next_meeting if title is None else title
+    form["page_name"] = title
 
     robot.submit_form(form)
 
