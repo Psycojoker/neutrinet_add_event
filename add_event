@@ -31,6 +31,7 @@ def main(d=None, m=None, hour="19", y=None, min="30", location="123 rue royale 1
 
     robot.open("https://neutrinet.be/index.php")
 
+    year = date.today().year
 
     if title is None:
         previous_meeting = [x.text for x in robot.find_all('a', href=lambda x: x and 'Event:' in x) if re.match('^Meeting [0-9]+/[0-9]+$', x.text)]
