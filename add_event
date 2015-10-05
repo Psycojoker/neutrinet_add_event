@@ -14,7 +14,7 @@ from robobrowser import RoboBrowser
 @argh.arg('--hour', type=int, help='hour')
 @argh.arg('--min', type=int, help='minutes')
 @argh.arg('--location', help='location')
-def main(d=None, m=None, hour="19", y=None, min="30", location="123 rue royale 1000 Bruxelles Belgique", title=None):
+def main(d=None, m=None, hour="19", y=None, min="30", location="123 rue royale 1000 Bruxelles Belgique", title=None, body=None):
     robot = RoboBrowser(parser="html5lib")
 
     if m is None:
@@ -90,6 +90,13 @@ def main(d=None, m=None, hour="19", y=None, min="30", location="123 rue royale 1
 
     form = robot.get_form("sfForm")
 
+    if body is not None:
+        pass
+    elif title is None:
+        body = 'https://pad.lqdn.fr/p/neutrinet-%.2i-%i' % (next_number, y)
+    else:
+        body = ''
+
     form['Event[Date][day]'] = d
     form['Event[Date][month]'] = '%.2i' % m
     form['Event[Date][year]'] = y
@@ -99,7 +106,7 @@ def main(d=None, m=None, hour="19", y=None, min="30", location="123 rue royale 1
     form['Event[Lieu]'] = location
     form['Event[Organisateur]'] = username
     form['Event[Statut]'] = 'Ready'
-    form['sf_free_text'] = ('https://pad.lqdn.fr/p/neutrinet-%.2i-%i' % (next_number, y)) if title is None else ''
+    form['sf_free_text'] = body
 
     robot.submit_form(form, form.submit_fields["wpSave"])
 
